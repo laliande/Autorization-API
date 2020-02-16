@@ -1,0 +1,4 @@
+*_pycache__
+*.vscode
+*process.env
+*config.py
