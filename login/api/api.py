@@ -3,28 +3,34 @@ from flask import request
 from flask import Response
 from flask_bcrypt import Bcrypt, generate_password_hash
 from json import dumps
-from login.registration import Login
+from login.registration import Login, collection
 
 
 api = Blueprint('api', __name__)
 
 
-def createUser():
-    name = request.form.get('name')
-    surname = request.form.get('surname')
+def CreateUser():
     email = request.form.get('email')
     login = request.form.get('login')
+    name = request.form.get('name')
+    surname = request.form.get('surname')
     hashedPassword = generate_password_hash(
         request.form.get('password')).decode('utf-8')
     user = Login(name, surname, email, login, hashedPassword)
-    user.addRecordToBD()
+    try:
+        user.addRecordToBD()
+        return True
+    except:
+        return False
 
 
 @api.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
         try:
-            createUser()
-            return Response(dumps({'response': 'succses create user'}), status=201,  mimetype='application/json')
+            if (CreateUser()):
+                return Response(dumps({'response': 'sucsess create user'}), status=201,  mimetype='application/json')
+            else:
+                return Response(dumps({'response': 'this email or login are in BD'}), mimetype='application/json')
         except:
             return Response(dumps({'response': 'user no created. Pleace, check availability all field'}), mimetype='application/json')

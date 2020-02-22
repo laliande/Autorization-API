@@ -11,6 +11,8 @@ token = getenv("MONGO")
 client = MongoClient(token)
 db = client['db']
 collection = db.logins
+collection.create_index('login', unique=True, background=True)
+collection.create_index('email', unique=True, background=True)
 
 
 class Login:
@@ -34,7 +36,3 @@ class Login:
     def addRecordToBD(self):
         record = self.createRecord()
         collection.insert_one(record)
-
-
-user = Login('Daniella', 'flask', 'flask', 'flask', 'flask', 'flask')
-user.addRecordToBD()
