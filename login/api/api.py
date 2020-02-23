@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import request
 from flask import Response
-from flask_bcrypt import Bcrypt, generate_password_hash
+from flask_bcrypt import generate_password_hash
 from json import dumps
 from login.registration import Login, collection
 
@@ -24,8 +24,8 @@ def CreateUser():
         return False
 
 
-@api.route('/login', methods=['POST'])
-def login():
+@api.route('/sign-up', methods=['POST'])
+def registration():
     if request.method == 'POST':
         try:
             if (CreateUser()):
