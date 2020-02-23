@@ -33,4 +33,4 @@ def login():
             else:
                 return Response(dumps({'response': 'this email or login are in BD'}), status=404, mimetype='application/json')
         except:
-            return Response(dumps({'response': 'user no created. Pleace, check availability all field'}), status=404, mimetype='application/json')
+            return Response(dumps({'response': 'user no created. Pleace, check availability all field'}), status=400, mimetype='application/json')
