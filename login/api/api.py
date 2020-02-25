@@ -5,7 +5,6 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 from json import dumps
 from login.registration import Login, collection
 from datetime import datetime, timedelta
-from time import time
 import jwt
 from config import SECRET_KEY
 
@@ -28,7 +27,7 @@ def CreateUser():
 
 
 @api.route('/sign-up', methods=['POST'])
-def registration():
+def signUp():
     try:
         if (CreateUser()):
             return Response(dumps({'response': 'sucsess create user'}), status=201,  mimetype='application/json')
@@ -38,21 +37,21 @@ def registration():
         return Response(dumps({'response': 'user no created. Pleace, check availability all field'}), status=400, mimetype='application/json')
 
 
-@api.route('/sign-in', methods=['GET'])
+@api.route('/sign-in', methods=['POST'])
 def signIn():
-    auth = request.authorization
-    if auth:
-        try:
-            login = auth.username
-            password = auth.password
-            findUser = list(collection.find(
-                {'login': login, 'password': password}))
-            if len(findUser) != 0:
-                token = jwt.encode(
-                    {'user': login, 'exp': datetime.now() + timedelta(minutes=30)}, SECRET_KEY, algorithm='HS256').decode('utf-8')
-                return Response(dumps({'response': 'TOKEN is ' + token}), status=200, mimetype='application/json')
-            return Response(dumps({'response': 'No valid login or password'}), status=400, mimetype='application/json')
-        except:
-            return Response(dumps({'response': 'No login or password. Pleace, check availability all field'}), status=400, mimetype='application/json')
+    login = request.form.get('login')
+    password = request.form.get('password')
+    users = list(collection.find({'login': login}))
+    if len(users) != 0:
+        for IUser in range(len(users)):
+            if users[IUser].get('login') == login:
+                hashedPassword = users[IUser].get('password')
+                break
+        if check_password_hash(hashedPassword, password):
+            token = jwt.encode(
+                {'user': login, 'exp': datetime.now() + timedelta(minutes=30)}, SECRET_KEY, algorithm='HS256').decode('utf-8')
+            return Response(dumps({'response': 'Your token: ' + token}), status=200, mimetype='application/json')
+        else:
+            return Response(dumps({'response': 'No invalid this password'}), status=404, mimetype='application/json')
     else:
-        return Response(dumps({'response': 'Please, enter authorization data'}), mimetype='application/json')
+        return Response(dumps({'response': 'No this login in BD'}), status=400, mimetype='application/json')
