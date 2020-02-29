@@ -13,7 +13,7 @@ def loginMiddleware(func):
             try:
                 jwt.decode(token, SECRET_KEY)
             except:
-                return Response(dumps({'response': 'The token is not valid'}), status=401, mimetype='application/json')
+                return Response(dumps({'response': 'The token is not valid'}), status=403, mimetype='application/json')
             return func(*args, **kwargs)
         except:
             return Response(dumps({'response': 'The token is not difined'}), status=401,  mimetype='application/json')
