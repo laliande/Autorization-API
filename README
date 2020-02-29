@@ -1,0 +1,7 @@
+This is an authorization API.
+
+Implemented: 
+
+- user registration with saving the password hash in the database. 
+- authorization of users in the system and issuance of the JWT token. 
+- checking the token and granting access to the system.
