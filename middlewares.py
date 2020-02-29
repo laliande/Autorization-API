@@ -1,13 +1,20 @@
 from functools import wraps
 from flask import Response, request
 from json import dumps
+import jwt
+from config import SECRET_KEY
 
 
 def loginMiddleware(func):
     @wraps(func)
     def decoratorFunc(*args, **kwargs):
-        token = request.authorization['token']
-        if token == 'qwer':
+        try:
+            token = request.headers['Authorization'][7:]
+            try:
+                jwt.decode(token, SECRET_KEY)
+            except:
+                return Response(dumps({'response': 'The token is not valid'}), status=401, mimetype='application/json')
             return func(*args, **kwargs)
-        return Response(dumps({'response': 'Authorization failed'}), status=401, mimetype='application/json')
+        except:
+            return Response(dumps({'response': 'The token is not difined'}), status=401,  mimetype='application/json')
     return decoratorFunc

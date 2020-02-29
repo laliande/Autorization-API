@@ -3,10 +3,11 @@ from flask import request
 from flask import Response
 from flask_bcrypt import generate_password_hash, check_password_hash
 from json import dumps
-from login.registration import Login, collection
+from registration import Login, collection
 from datetime import datetime, timedelta
 import jwt
 from config import SECRET_KEY
+from middlewares import loginMiddleware
 
 api = Blueprint('api', __name__)
 
@@ -55,3 +56,9 @@ def signIn():
             return Response(dumps({'response': 'No invalid this password'}), status=404, mimetype='application/json')
     else:
         return Response(dumps({'response': 'No this login in BD'}), status=400, mimetype='application/json')
+
+
+@api.route('/protected', methods=['GET'])
+@loginMiddleware
+def protected():
+    return Response(dumps({'response': 'Authentication is successful'},), status=200, mimetype='application/json')
