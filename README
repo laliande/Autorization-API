@@ -5,3 +5,8 @@ Implemented:
 - user registration with saving the password hash in the database. 
 - authorization of users in the system and issuance of the JWT token. 
 - checking the token and granting access to the system.
+- created API documentation in Swagger: https://app.swaggerhub.com/apis/laliande/Autorization/1.0.0 
+
+Documentation:
+
+https://app.swaggerhub.com/apis/laliande/Autorization/1.0.0
