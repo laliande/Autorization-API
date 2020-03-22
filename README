@@ -7,6 +7,13 @@ Implemented:
 - checking the token and granting access to the system.
 - created API documentation in Swagger: https://app.swaggerhub.com/apis/laliande/Autorization/1.0.0 
 
+Peculiar properties (use technology):
+
+- REST API
+- Flask
+- JWT Token
+- Mongo DB
+
 Documentation:
 
 https://app.swaggerhub.com/apis/laliande/Autorization/1.0.0
